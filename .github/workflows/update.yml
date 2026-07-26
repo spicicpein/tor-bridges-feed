@@ -18,19 +18,22 @@ jobs:
         run: |
           set -e
           URL="https://gitweb.torproject.org/builders/tor-browser-build.git/plain/projects/tor-browser/Bundle-Data/PTConfigs/bridge_prefs.js"
-          curl -sL -o bridge_prefs.js "$URL" || true
-          echo "--- fetched file (first 40 lines) ---"
-          head -40 bridge_prefs.js || true
+          curl -sL -D headers.txt -o bridge_prefs.js "$URL" || true
+          echo "size: $(wc -c < bridge_prefs.js 2>/dev/null || echo 0)" > fetch-debug.log
+          echo "--- headers ---" >> fetch-debug.log
+          cat headers.txt >> fetch-debug.log
+          echo "--- first 2000 chars ---" >> fetch-debug.log
+          head -c 2000 bridge_prefs.js >> fetch-debug.log
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
 
       - name: Cleanup
-        run: rm -f bridge_prefs.js
+        run: rm -f bridge_prefs.js headers.txt
 
       - name: Commit if changed
         run: |
           git config user.email "actions@github.com"
           git config user.name "bridge-feed-bot"
-          git add bridges.json
+          git add bridges.json fetch-debug.log
           git diff --cached --quiet && echo "no changes" || (git commit -m "update bridges $(date -u +%Y-%m-%d)" && git push)
