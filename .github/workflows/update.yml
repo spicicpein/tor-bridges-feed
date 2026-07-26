@@ -14,17 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Explore repo structure
+      - name: Explore projects/tor-browser tree
         run: |
           set -e
           PROJECT="tpo%2Fapplications%2Ftor-browser-build"
-          echo "--- project info (default branch) ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}" | python3 -c "import json,sys; d=json.load(sys.stdin); print('default_branch:', d.get('default_branch'))" >> fetch-debug.log 2>&1 || true
-          echo "--- root tree ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?per_page=100" >> fetch-debug.log 2>&1 || true
+          echo "--- projects/ ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects&per_page=100" >> fetch-debug.log 2>&1
           echo "" >> fetch-debug.log
-          echo "--- search for bridge_prefs anywhere in repo ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/search?scope=blobs&search=bridge_prefs" >> fetch-debug.log 2>&1 || true
+          echo "--- projects/tor-browser/ ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/tor-browser&per_page=100" >> fetch-debug.log 2>&1
+          echo "" >> fetch-debug.log
+          echo "--- projects/tor-browser/Bundle-Data/ ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/tor-browser/Bundle-Data&per_page=100" >> fetch-debug.log 2>&1
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
