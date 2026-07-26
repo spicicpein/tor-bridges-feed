@@ -14,18 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Explore projects/tor-browser tree
+      - name: Explore moat-settings project
         run: |
           set -e
           PROJECT="tpo%2Fapplications%2Ftor-browser-build"
-          echo "--- projects/ ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects&per_page=100" >> fetch-debug.log 2>&1
+          echo "--- projects/moat-settings/ ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/moat-settings&per_page=100" >> fetch-debug.log 2>&1
           echo "" >> fetch-debug.log
-          echo "--- projects/tor-browser/ ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/tor-browser&per_page=100" >> fetch-debug.log 2>&1
-          echo "" >> fetch-debug.log
-          echo "--- projects/tor-browser/Bundle-Data/ ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/tor-browser/Bundle-Data&per_page=100" >> fetch-debug.log 2>&1
+          echo "--- also check for a 'moat' or 'rdsys' or 'bridgedb' standalone project ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/groups/tpo/projects?search=settings&per_page=50" >> fetch-debug.log 2>&1
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
