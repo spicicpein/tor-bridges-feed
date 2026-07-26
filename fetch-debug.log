@@ -1,4 +1,25 @@
---- projects/moat-settings/ ---
-[{"id":"ec7f617066697a02ced6dde9427b261d87788972","name":"README.md","type":"blob","path":"projects/moat-settings/README.md","mode":"100644"},{"id":"82b744bc559f45c236c946804551c4973ea1de46","name":"build","type":"blob","path":"projects/moat-settings/build","mode":"100644"},{"id":"142525d94cffe927399895d810c69cb53588ae5c","name":"config","type":"blob","path":"projects/moat-settings/config","mode":"100644"}]
---- also check for a 'moat' or 'rdsys' or 'bridgedb' standalone project ---
-[]
+--- README.md ---
+We use this project to fetch the Moat circumvention data to make sure we have it
+even before running non-Tor requests on the browser.
+
+--- config ---
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.[% c("compress_tar") %]'
+git_url: https://gitlab.torproject.org/tpo/anti-censorship/rdsys-admin.git
+git_hash: 0061ce86ee2dfc8c451a78d28d0ef09e4ed7f36e
+version: '[% c("abbrev") %]'
+# Use gz for now, since we do not support Zstandard on Linux containers.
+compress_tar: 'gz'
+
+--- build ---
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -xf [% project %]-[% c("version") %].tar.[% c('compress_tar') %] [% project %]-[% c("version") %]/conf/circumvention.json
+jq -c keys [% project %]-[% c("version") %]/conf/circumvention.json > moat_countries.json
+
+[% c("touch") %] moat_countries.json
+[% c('tar', {
+        tar_src => 'moat_countries.json',
+        tar_args => '-caf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
