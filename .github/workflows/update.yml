@@ -14,15 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Explore moat-settings project
+      - name: Read moat-settings README and config
         run: |
           set -e
           PROJECT="tpo%2Fapplications%2Ftor-browser-build"
-          echo "--- projects/moat-settings/ ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/moat-settings&per_page=100" >> fetch-debug.log 2>&1
+          echo "--- README.md ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/projects%2Fmoat-settings%2FREADME.md/raw?ref=main" >> fetch-debug.log 2>&1
           echo "" >> fetch-debug.log
-          echo "--- also check for a 'moat' or 'rdsys' or 'bridgedb' standalone project ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/groups/tpo/projects?search=settings&per_page=50" >> fetch-debug.log 2>&1
+          echo "--- config ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/projects%2Fmoat-settings%2Fconfig/raw?ref=main" >> fetch-debug.log 2>&1
+          echo "" >> fetch-debug.log
+          echo "--- build ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/projects%2Fmoat-settings%2Fbuild/raw?ref=main" >> fetch-debug.log 2>&1
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
