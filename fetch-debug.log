@@ -1,6 +1,6 @@
---- searching repo tree for bridge-related files ---
-{"message":"404 invalid revision or path Not Found"}
---- try main branch instead of HEAD ---
-size: 32
---- first 500 chars of bridge_prefs.js attempt ---
-{"message":"404 File Not Found"}
+--- project info (default branch) ---
+default_branch: main
+--- root tree ---
+[{"id":"c0ab76e3814b66c7fb8d9b217dcf0538bb272bbb","name":".gitlab","type":"tree","path":".gitlab","mode":"040000"},{"id":"1065aa4cde28d312702013079d2e3cfb197616ac","name":"doc","type":"tree","path":"doc","mode":"040000"},{"id":"c033ed642d0efef10439a5a0dc6f054d9a2b140e","name":"keyring","type":"tree","path":"keyring","mode":"040000"},{"id":"07c592ee43348412206a918555a9b52b7bc4d13a","name":"projects","type":"tree","path":"projects","mode":"040000"},{"id":"54de02d870871a2b0251220de791bbc4aca83176","name":"tools","type":"tree","path":"tools","mode":"040000"},{"id":"fc62f5d0baab13fd77748895de0ee1f9da8c41b4","name":".gitignore","type":"blob","path":".gitignore","mode":"100644"},{"id":"66930d20b341bad451254c6faee9ca44148c3588","name":".gitmodules","type":"blob","path":".gitmodules","mode":"100644"},{"id":"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391","name":".nobackup","type":"blob","path":".nobackup","mode":"100644"},{"id":"2bf41db2234f8cab5f0261e28cd614e14a90a34e","name":"ChangeLog-MB.txt","type":"blob","path":"ChangeLog-MB.txt","mode":"120000"},{"id":"c1a87117f497ea2a8b44da364fdca790c3f74b1a","name":"ChangeLog-TBB.txt","type":"blob","path":"ChangeLog-TBB.txt","mode":"120000"},{"id":"0343a481a5157ebbefe74a34929eea9df4c484d9","name":"LICENSE","type":"blob","path":"LICENSE","mode":"100644"},{"id":"36f3bec8be50f543cfdf31a04eb6a0ee934dbf08","name":"Makefile","type":"blob","path":"Makefile","mode":"100644"},{"id":"5ef1351dbdbedf4944fcd43eef773a59ed036472","name":"README","type":"blob","path":"README","mode":"100644"},{"id":"148e1f5b7e3e6cca4db76730c496fe1244b3d662","name":"rbm.conf","type":"blob","path":"rbm.conf","mode":"100644"},{"id":"9eb0dfc688c3ddcf8cb39e2c8da5efdc3edc1855","name":"rbm.local.conf.example","type":"blob","path":"rbm.local.conf.example","mode":"100644"},{"id":"865f2c9842520958879665d5c9b820d9ed51761e","name":"rbm","type":"commit","path":"rbm","mode":"160000"}]
+--- search for bridge_prefs anywhere in repo ---
+{"message":"401 Unauthorized"}
