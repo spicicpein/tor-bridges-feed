@@ -14,24 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Locate and fetch current default bridges
+      - name: Explore repo structure
         run: |
           set -e
           PROJECT="tpo%2Fapplications%2Ftor-browser-build"
-          echo "--- searching repo tree for bridge-related files ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/tor-browser/Bundle-Data/PTConfigs&ref=main&per_page=100" >> fetch-debug.log 2>&1 || true
+          echo "--- project info (default branch) ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}" | python3 -c "import json,sys; d=json.load(sys.stdin); print('default_branch:', d.get('default_branch'))" >> fetch-debug.log 2>&1 || true
+          echo "--- root tree ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?per_page=100" >> fetch-debug.log 2>&1 || true
           echo "" >> fetch-debug.log
-          echo "--- try main branch instead of HEAD ---" >> fetch-debug.log
-          curl -sL -o bridge_prefs.js "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/projects%2Ftor-browser%2FBundle-Data%2FPTConfigs%2Fbridge_prefs.js/raw?ref=main" || true
-          echo "size: $(wc -c < bridge_prefs.js 2>/dev/null || echo 0)" >> fetch-debug.log
-          echo "--- first 500 chars of bridge_prefs.js attempt ---" >> fetch-debug.log
-          head -c 500 bridge_prefs.js >> fetch-debug.log
+          echo "--- search for bridge_prefs anywhere in repo ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/search?scope=blobs&search=bridge_prefs" >> fetch-debug.log 2>&1 || true
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
-
-      - name: Cleanup
-        run: rm -f bridge_prefs.js headers.txt
 
       - name: Commit if changed
         run: |
