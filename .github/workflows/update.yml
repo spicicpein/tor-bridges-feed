@@ -14,15 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch circumvention.json from rdsys-admin
+      - name: Search the renamed 'browser' project for default bridge prefs
         run: |
           set -e
-          PROJECT="tpo%2Fanti-censorship%2Frdsys-admin"
-          echo "--- project default branch ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('default_branch'))" >> fetch-debug.log 2>&1
-          echo "--- conf/circumvention.json (first 3000 chars) ---" >> fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/conf%2Fcircumvention.json/raw?ref=main" -o circumvention.json 2>&1
-          head -c 3000 circumvention.json >> fetch-debug.log
+          PROJECT="tpo%2Fapplications%2Ftor-browser-build"
+          echo "--- projects/browser/ ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/browser&per_page=100" >> fetch-debug.log 2>&1
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
