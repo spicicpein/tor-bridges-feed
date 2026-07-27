@@ -14,15 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Search the renamed 'browser' project for default bridge prefs
+      - name: Fetch bridge_prefs.js from the correct renamed path
         run: |
           set -e
           PROJECT="tpo%2Fapplications%2Ftor-browser-build"
-          echo "--- projects/browser/ ---" > fetch-debug.log
-          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/browser&per_page=100" >> fetch-debug.log 2>&1
+          echo "--- Bundle-Data/PTConfigs listing ---" > fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/tree?path=projects/browser/Bundle-Data/PTConfigs&per_page=100" >> fetch-debug.log 2>&1
+          echo "" >> fetch-debug.log
+          echo "--- bridge_prefs.js content ---" >> fetch-debug.log
+          curl -sL "https://gitlab.torproject.org/api/v4/projects/${PROJECT}/repository/files/projects%2Fbrowser%2FBundle-Data%2FPTConfigs%2Fbridge_prefs.js/raw?ref=main" -o bridge_prefs.js 2>&1
+          head -c 3000 bridge_prefs.js >> fetch-debug.log
 
       - name: Parse and write bridges.json
         run: python3 scripts/parse_bridges.py
+
+      - name: Cleanup
+        run: rm -f bridge_prefs.js
 
       - name: Commit if changed
         run: |
